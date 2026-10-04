@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+
+minimumReleaseAgeExclude:
+  - '@types/node@22.20.5'
+
+onlyBuiltDependencies:
+  - sharp
+
+verifyDepsBeforeRun: false

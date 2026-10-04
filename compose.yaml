@@ -1,0 +1,45 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    env_file: .env
+    environment:
+      API_HOST: 0.0.0.0
+      HTTP_TOOL_ALLOWED_ORIGINS: '["http://api:8000"]'
+      HTTP_HEALTH_CHECK_URL: http://api:8000/api/v1/health
+      MCP_ALLOWED_ENDPOINTS: '["http://demo-mcp:8101/mcp"]'
+    ports: ["8000:8000"]
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    environment:
+      API_BASE_URL: http://api:8000
+      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+    depends_on: [api]
+    ports: ["3000:3000"]
+
+  platform-mcp:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    command: ["python", "-m", "uvicorn", "services.platform_mcp.server:app", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      PLATFORM_API_URL: http://api:8000/api/v1
+      PLATFORM_AGENT_ID: 00000000-0000-0000-0000-000000000101
+      PLATFORM_PRINCIPAL: local-admin
+      PLATFORM_MCP_HOST: 0.0.0.0
+    depends_on: [api]
+    ports: ["8100:8100"]
+
+  demo-mcp:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    command: ["python", "-m", "services.demo_mcp.server"]
+    environment:
+      DEMO_MCP_HOST: 0.0.0.0
+      DEMO_MCP_PORT: 8101
+    ports: ["8101:8101"]

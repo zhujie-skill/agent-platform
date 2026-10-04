@@ -1,0 +1,20 @@
+{
+  "name": "agent-tool-platform",
+  "version": "0.5.0",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/dev.ps1",
+    "dev:web": "corepack pnpm --filter @agent-platform/web dev",
+    "build": "corepack pnpm --filter @agent-platform/web build",
+    "typecheck": "corepack pnpm --filter @agent-platform/web typecheck",
+    "check": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/check.ps1"
+  },
+  "devDependencies": {
+    "concurrently": "10.0.5"
+  }
+}
+
